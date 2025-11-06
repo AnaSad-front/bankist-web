@@ -14,6 +14,8 @@ const tabsContent = document.querySelectorAll('.operations__content');
 
 const nav = document.querySelector('.nav');
 
+const header = document.querySelector('.header');
+
 ///////////////////////////////////////
 // Modal window
 const openModal = function (e) {
@@ -114,13 +116,28 @@ nav.addEventListener('mouseout', handleHover.bind(1));
 
 //////////////////////////////////////////
 // STICKY NAVIGATION
-const initialCoords = section1.getBoundingClientRect();
+// const initialCoords = section1.getBoundingClientRect();
 
-window.addEventListener('scroll', function () {
-  if (window.scrollY > initialCoords.top) nav.classList.add('sticky');
+// window.addEventListener('scroll', function () {
+//   if (window.scrollY > initialCoords.top) nav.classList.add('sticky');
+//   else nav.classList.remove('sticky');
+// });
+
+// sticky navigation: Intersection Observer API
+const navHeight = nav.getBoundingClientRect().height; // height of the nav bar
+
+const stickyNav = function (entries) {
+  const [entry] = entries;
+  if (!entry.isIntersecting) nav.classList.add('sticky');
   else nav.classList.remove('sticky');
-});
+};
 
+const headerObserver = new IntersectionObserver(stickyNav, {
+  root: null, // use the viewport as root
+  threshold: 0, // 0% of the header is visible
+  rootMargin: `-${navHeight}px`,
+});
+headerObserver.observe(header);
 ///////////////////////////////////////
 
 // SELECTING, CREATING, AND DELETING ELEMENTS
